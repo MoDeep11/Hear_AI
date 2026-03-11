@@ -14,18 +14,17 @@ Total diaries recorded so far is {totalDiaries}.
 # Constraints
 1. Tone: Use a friendly, casual tone as if speaking to a friend.
 2. Format: Respond ONLY in the JSON format provided below.
+3. Language: Write all response values in Korean.
 
 # Input Data
 {diary_summary}
 
-# Output Format (JSON)
-{
-  "summary": "...",
-  "emotions": {
-    "joy": "%",
-    "calm": "%",
-    "sadness": "%",
-    "other": "%"
-  },
-  "advice": "..."
-}
+# Output Format
+Respond with ONLY a raw JSON object. No markdown, no code fences, no extra whitespace in keys.
+All keys must be exactly as shown below:
+
+{{
+  "userId": "...",
+  "yearMonth": "...",
+  "aiReportContent": "..."
+}}
