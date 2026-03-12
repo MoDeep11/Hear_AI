@@ -17,3 +17,10 @@ async def _speak_async(text):
 def speak(text):
     # TTS 생성
     asyncio.run(_speak_async(text))
+
+    # MP3 재생
+    pygame.mixer.music.load("voice.mp3")
+    pygame.mixer.music.play()
+
+    while pygame.mixer.music.get_busy():
+        pass
