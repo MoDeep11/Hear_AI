@@ -1,25 +1,40 @@
 import logging
+import uuid
+import aiofiles
+import os
 from ai.pipelines.diary_generator import DiaryGenerator
+from ai.voice.stt import STTService
+from ai.voice.tts import TTLService
 
 # 로깅 설정
 logger = logging.getLogger(__name__)
 
 class DiaryService:
-    def __init__(self, generator: DiaryGenerator):
+    def __init__(self, generator: DiaryGenerator, stt: STTService, tts: TTLService):
         self.generator = generator
+        self.stt_service = stt
+        self.tts_service = tts
+        # 임시 파일 및 오디도 저장 경로
+        self.temp_dir = "static/temp"
+        os.makedirs(self.temp_dir, exist_ok=True)
 
     async def process_voice_diary(self, file, session_id: str, user_data: dict):
+        temp_file_path = os.path.join(self.temp_dir, f"{uuid.uuid4()}.wav")
+        
         
         try:
+            content = await file.read()
+            async with aiofiles.open(temp_file_path, 'wb') as f:
+                await f.write(content)
             # STT 단계 유저 음성 -> 텍스트 변환
-            # TODO: STT 브랜치에서 만든 함수를 임포트하여 연결
-            # 예: user_transcription = await stt_service.transcribe(file)
-            user_transcription = "오늘 하루는 정말 평범했는데, 점심에 먹은 파스타가 맛있었어." # 테스트용 임시 데이터
+            user_transcription = await self.stt_service.transcribe(temp_file_path)
+            if not user_transcription:
+                user_transcription = "인식된 내용이 없습니다"
 
-            # Gemini 단계 상황 판단 및 답변/일기 생성
             # user_data에서 필요한 정보 추출
             history = user_data.get("history", [])
             user_info = user_data.get("userInfo", {})
+            nickname = user_info.get("nickname", "유저") # 명세서의 'nickname' 추출
 
             # generator 호출
             ai_result = await self.generator.generate_response(
@@ -27,16 +42,15 @@ class DiaryService:
                 history=history,
                 user_info=user_info
             )
-
-            # TTS 단계 AI 답변 텍스트 -> 음성 파일 URL 생성
-            # TODO: TTS 브랜치 담당자가 만든 함수를 임포트하여 연결
-            # ai_audio_url = await tts_service.generate_url(ai_result["aiResponseText"])
-            ai_audio_url = None # 아직 구현 전이라면 null 유지
-
-            # 4. 최종 JSON 객체 조립 (Spring 서버 규격)
+            
+            ai_response_text = ai_result.get("aiResponseText", "")
+            
+            if ai_response_text:
+                ai_audio_url = await self.tts_service.generate_audio_url(ai_response_text)
+                
             final_response = {
                 "userTranscription": user_transcription,
-                "aiResponseText": ai_result.get("aiResponseText"),
+                "aiResponseText": ai_response_text,
                 "aiAudioUrl": ai_audio_url,
                 "status": ai_result.get("status"),       # "CONTINUE" 또는 "FINISH"
                 "suggestion": ai_result.get("suggestion"), # "IMAGE_UPLOAD" 또는 null
@@ -57,3 +71,6 @@ class DiaryService:
                 "suggestion": None,
                 "sessionId": session_id
             }
+        finally:
+            if os.path.exists(temp_file_path): # 사용이 끝난 임시 음성 파일 삭제
+              os.remove(temp_file_path)
