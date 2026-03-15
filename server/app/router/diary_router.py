@@ -1,4 +1,4 @@
-from fastapi import FastAPI, APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from dotenv import load_dotenv
 import json
 import sys
@@ -13,10 +13,11 @@ print(f"DEBUG: Root path is {root_path}")
 
 from ai.pipelines.diary_generator import DiaryGenerator
 from server.app.service.diary_service import DiaryService
+from ai.voice.stt import STTService
+from ai.voice.tts import TTSService
 
 logger = logging.getLogger(__name__)
-# 실험
-app = FastAPI()
+
 router = APIRouter(prefix="/internal/v1/chats", tags=["Chat/Diary"])
 
 load_dotenv()
@@ -24,21 +25,23 @@ API_KEY = os.getenv("GEMINI_API_KEY")
 if not API_KEY:
     raise ValueError("API 키가 설정되지 않았습니다. .env 파일을 확인해주세요.")
 
+stt_service = STTService()
+tts_service = TTSService()
 generator = DiaryGenerator(api_key=API_KEY)
-diary_service = DiaryService(generator=generator)
+diary_service = DiaryService(generator=generator, stt_service=stt_service, tts_service=tts_service)
 
 @router.post("/messages")
 async def handle_voice_message(
     file: UploadFile = File(...),
     sessionId: str = Form(...),
     userInfo: str = Form(...),
-    userAudioUrl: str = Form(None)
+    # userAudioUrl: str = Form(None)
 ):
     try:
         # JSON 문자열로 들어온 userInfo 파싱
         try:
             user_data = json.loads(userInfo)
-            user_data["userAudioUrl"] = userAudioUrl
+            # user_data["userAudioUrl"] = userAudioUrl
             user_data["sessionId"] = sessionId
         except json.JSONDecodeError:
             raise HTTPException(status_code=400, detail="userInfo must be a valid JSON string")
@@ -56,5 +59,3 @@ async def handle_voice_message(
     except Exception as e:
         logger.error(f"Router Error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
-    
-app.include_router(router)
