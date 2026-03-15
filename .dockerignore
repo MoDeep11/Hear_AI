@@ -1,0 +1,10 @@
+**/__pycache__/
+.venv/
+.env/
+.env
+.gitignore
+.dockerignore
+README.md
+.vscode/
+static/temp/*
+static/audio/*

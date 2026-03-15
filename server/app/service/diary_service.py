@@ -4,16 +4,16 @@ import aiofiles
 import os
 from ai.pipelines.diary_generator import DiaryGenerator
 from ai.voice.stt import STTService
-from ai.voice.tts import TTLService
+from ai.voice.tts import TTSService
 
 # 로깅 설정
 logger = logging.getLogger(__name__)
 
 class DiaryService:
-    def __init__(self, generator: DiaryGenerator, stt: STTService, tts: TTLService):
+    def __init__(self, generator: DiaryGenerator, stt_service: STTService, tts_service: TTSService):
         self.generator = generator
-        self.stt_service = stt
-        self.tts_service = tts
+        self.stt_service = stt_service
+        self.tts_service = tts_service
         # 임시 파일 및 오디도 저장 경로
         self.temp_dir = "static/temp"
         os.makedirs(self.temp_dir, exist_ok=True)
@@ -21,20 +21,19 @@ class DiaryService:
     async def process_voice_diary(self, file, session_id: str, user_data: dict):
         temp_file_path = os.path.join(self.temp_dir, f"{uuid.uuid4()}.wav")
         
-        
         try:
             content = await file.read()
             async with aiofiles.open(temp_file_path, 'wb') as f:
                 await f.write(content)
             # STT 단계 유저 음성 -> 텍스트 변환
             user_transcription = await self.stt_service.transcribe(temp_file_path)
+            
             if not user_transcription:
                 user_transcription = "인식된 내용이 없습니다"
 
             # user_data에서 필요한 정보 추출
             history = user_data.get("history", [])
             user_info = user_data.get("userInfo", {})
-            nickname = user_info.get("nickname", "유저") # 명세서의 'nickname' 추출
 
             # generator 호출
             ai_result = await self.generator.generate_response(
@@ -44,10 +43,9 @@ class DiaryService:
             )
             
             ai_response_text = ai_result.get("aiResponseText", "")
-            
+            ai_audio_url = None
             if ai_response_text:
                 ai_audio_url = await self.tts_service.generate_audio_url(ai_response_text)
-                
             final_response = {
                 "userTranscription": user_transcription,
                 "aiResponseText": ai_response_text,
