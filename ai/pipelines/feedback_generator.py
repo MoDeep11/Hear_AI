@@ -1,9 +1,6 @@
 import os
 from google import genai
-from dotenv import load_dotenv
 from datetime import datetime
-
-load_dotenv()
 
 class FeedbackGenerator:
     def __init__(self):
@@ -25,7 +22,7 @@ class FeedbackGenerator:
 
         try:
             response = self.client.models.generate_content(
-                model="models/gemini-2.5-flash", # 또는 사용 중인 모델명
+                model="models/gemini-2.5-flash",
                 contents=instruction
             )
             return response.text
