@@ -1,0 +1,16 @@
+services:
+
+  ai-server:
+    build: .
+    container_name: hear_ai_container
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - .:/app          # 로컬 코드를 컨테이너에 동기화 (수정 시 바로 반영)
+      - /app/.venv      # 컨테이너 내 라이브러리는 로컬 venv에 덮어씌워지지 않게 보호
+      - /app/__pycache__ # 파이썬 캐시 파일 충돌 방지
+    environment:
+      - PYTHONUNBUFFERED=1 # 로그가 실시간으로 터미널에 찍히게 함
+    restart: always

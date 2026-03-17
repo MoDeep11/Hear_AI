@@ -1,4 +1,10 @@
 .env
 __pycache__/
 *.pyc
+<<<<<<< feature/monthly-report
 .venv/
+=======
+.venv/
+static/audio/*
+static/temp/*
+>>>>>>> dev
