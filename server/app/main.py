@@ -10,10 +10,12 @@ if root_path not in sys.path:
     sys.path.insert(0, root_path)
 
 # 라우터 불러오기
+from server.app.router.chat_router import router as chat_init_router
 from server.app.router.diary_router import router as diary_router
 from server.app.router.feedback_router import router as feedback_router
+from server.app.router.report_router import router as report_router
 
-# .env 파일을 읽어오는 함수 (로컬 실행 시 필수)
+# .env 파일을 읽어오는 함수
 load_dotenv()
 
 # 환경 변수에서 키 가져오기
@@ -29,5 +31,7 @@ app = FastAPI(title="Hear_AI API Server")
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
+app.include_router(chat_init_router)
 app.include_router(diary_router)
 app.include_router(feedback_router)
+app.include_router(report_router)

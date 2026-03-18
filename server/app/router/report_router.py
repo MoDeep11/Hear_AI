@@ -13,7 +13,7 @@ if project_root not in sys.path:
 
 from server.app.service.report_service import generate_monthly_ai_report
 
-router = APIRouter(prefix="/internal/v1/statistics")
+router = APIRouter(prefix="/internal/v1/statistics", tags=["Report"])
 
 class DiaryEntry(BaseModel):
     diaryId: int
@@ -39,29 +39,3 @@ async def create_monthly_report(request: MonthlyReportRequest):
         "yearMonth": request.yearMonth,
         "aiReportContent": report_content
     }
-
-if __name__ == "__main__":
-    # 테스트용 가짜 데이터 생성
-    test_data = MonthlyReportRequest(
-        userId=1,
-        yearMonth="2026-03",
-        diaries=[
-            DiaryEntry(diaryId=1, date="2026-03-01", content="오늘 정말 행복했다!", emotion="Joy"),
-            DiaryEntry(diaryId=2, date="2026-03-05", content="업무가 너무 많아 힘들었다.", emotion="Sadness")
-        ],
-        monthlyDiaryCount=2,
-        monthlyPhotoCount=1,
-        totalDiaries=100,
-        maxStreak=5,
-        currentStreak=2
-    )
-
-    async def run_test():
-        print("\n=== AI 리포트 생성 테스트 시작 ===")
-        print(f"대상 달: {test_data.yearMonth}")
-        result = await create_monthly_report(test_data)
-        print("\n=== 생성된 결과 ===")
-        print(result["aiReportContent"])
-        print("==============================\n")
-
-    asyncio.run(run_test())
