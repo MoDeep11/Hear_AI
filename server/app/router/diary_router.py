@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Header
 from pydantic import BaseModel
 from typing import List, Optional
 import os
@@ -67,3 +67,36 @@ async def handle_voice_message(request: ChatRequest):
     except Exception as e:
         logger.error(f"Router Error: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# API 엔드포인트 for AI diary creation + emotion inference
+api_router = APIRouter(prefix="/api/v1", tags=["Chat/Diary"])
+
+class CreateDiaryRequest(BaseModel):
+    userInfo: UserInfo
+    userAudioUrls: Optional[List[str]] = []
+    aiAudioUrls: Optional[List[str]] = []
+    history: List[MessageHistory] = []
+
+class CreateDiaryResponse(BaseModel):
+    userInfo: UserInfo
+    content: str
+    emotion: str
+    tags: List[str] = []
+
+@api_router.post("/diaries", response_model=CreateDiaryResponse)
+async def create_diary(request: CreateDiaryRequest):
+
+    diary_data = await diary_service.create_diary(
+        user_info=request.userInfo.dict(),
+        history=[h.dict() for h in request.history],
+        user_audio_urls=request.userAudioUrls,
+        ai_audio_urls=request.aiAudioUrls
+    )
+
+    return CreateDiaryResponse(
+        userInfo=request.userInfo,
+        content=diary_data.get("content", ""),
+        emotion=diary_data.get("emotion", "NEUTRAL"),
+        tags=diary_data.get("tags", []) 
+    )
