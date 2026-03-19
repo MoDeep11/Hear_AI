@@ -68,7 +68,7 @@ class StickerGenerator:
     def generate_prompts(self, emotion: str, content: str, count: int) -> List[str]:
         """감정과 내용에 맞춘 스티커 프롬프트 생성 (sticker_generation.txt에서 템플릿 읽음)"""
         # sticker_generation.txt에서 프롬프트 템플릿 읽기
-        prompt_path = os.path.join(os.path.dirname(__file__), "../prompt/sticker_generation.txt")
+        prompt_path = os.path.join(os.path.dirname(__file__), "../prompts/sticker_generation.txt")
         with open(prompt_path, "r", encoding="utf-8") as f:
             prompt_template = f.read()
         

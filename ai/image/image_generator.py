@@ -68,7 +68,7 @@ class ImageGenerator:
         emotion_desc = self.emotion_prompts.get(emotion, "없음")
         
         # image_generation.txt에서 프롬프트 템플릿 읽기
-        prompt_path = os.path.join(os.path.dirname(__file__), "../prompt/image_generation.txt")
+        prompt_path = os.path.join(os.path.dirname(__file__), "../prompts/image_generation.txt")
         with open(prompt_path, "r", encoding="utf-8") as f:
             prompt_template = f.read()
         
