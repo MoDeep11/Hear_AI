@@ -25,7 +25,7 @@ class DiaryService:
         session_id_val = chat_data.sessionId
         temp_file_path = os.path.join(self.temp_dir, f"{uuid.uuid4()}.wav")
         user_transcription = ""
-        
+
         try:
             if chat_data.userAudioUrl:
                 async with httpx.AsyncClient() as client:
@@ -41,16 +41,15 @@ class DiaryService:
 
             if not user_transcription:
                 user_transcription = "내용 없음"
-            user_info_dict = chat_data.userInfo.dict()
-            user_info_dict['sessionId'] = session_id_val
+
             ai_result = await self.generator.generate_response(
                 user_text=user_transcription,
                 history=[h.dict() for h in chat_data.history],
                 user_info=chat_data.userInfo.dict()
             )
-            
+
             ai_response_text = ai_result.get("aiResponseText", "")
-            
+
             ai_audio_url = None
             if ai_response_text:
                 ai_audio_url = await self.tts_service.generate_audio_url(ai_response_text)
@@ -74,6 +73,25 @@ class DiaryService:
                 "suggestion": None,
                 "sessionId": session_id_val
             }
+
         finally:
             if os.path.exists(temp_file_path):
                 os.remove(temp_file_path)
+
+    async def create_diary(self, user_info, history, user_audio_urls=None, ai_audio_urls=None):
+        try:
+            diary_data = await self.generator.create_diary(
+                user_info=user_info,
+                history=history,
+                user_audio_urls=user_audio_urls,
+                ai_audio_urls=ai_audio_urls
+            )
+            return diary_data
+
+        except Exception as e:
+            logger.error(f"DiaryService create_diary Error: {str(e)}")
+            return {
+                "content": "죄송합니다. 일기 생성 중 오류가 발생했습니다.",
+                "emotion": "NEUTRAL",
+                "tags": []
+            }
