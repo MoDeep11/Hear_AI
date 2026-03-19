@@ -23,7 +23,6 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../..'))
 
 from ai.image.image_generator import image_generator, ImageGenerationRequest
 from ai.image.sticker_generator import sticker_generator, StickerGenerationRequest
-from ai.pipelines.hashtag_generator import hashtag_generator, HashtagGenerationRequest
 
 
 class DiaryServiceRequest(BaseModel):
@@ -151,73 +150,6 @@ class DiaryService:
             count=count,
         )
         return await sticker_generator.generate(request)
-    
-    async def generate_hashtags(self, user_id: int, emotion: str, content: str, count: int) -> Dict:
-        """해시태그 생성"""
-        request = HashtagGenerationRequest(
-            userId=user_id,
-            emotion=emotion,
-            content=content,
-            count=count,
-        )
-        return await hashtag_generator.generate(request)
-
-    async def generate_all(self, request: DiaryServiceRequest, task_id: str) -> Dict[str, Any]:
-        """모든 AI 컨텐츠를 병렬로 생성"""
-        tasks = []
-        results = {}
-        
-        # 생성할 작업 추가
-        if request.generateImage and request.diaryId:
-            tasks.append(
-                self.generate_image(
-                    request.userId,
-                    request.diaryId,
-                    request.emotion,
-                    request.content,
-                )
-            )
-            results['image_task'] = None
-        
-        if request.generateSticker and request.diaryId:
-            tasks.append(
-                self.generate_stickers(
-                    request.userId,
-                    request.diaryId,
-                    request.emotion,
-                    request.content,
-                    request.stickerCount,
-                )
-            )
-            results['sticker_task'] = None
-        
-        if request.generateHashtag:
-            tasks.append(
-                self.generate_hashtags(
-                    request.userId,
-                    request.emotion,
-                    request.content,
-                    request.hashtagCount,
-                )
-            )
-            results['hashtag_task'] = None
-        
-        # 병렬 처리
-        if tasks:
-            responses = await asyncio.gather(*tasks)
-            
-            # 결과 매핑
-            task_names = [name for name in results.keys()]
-            for task_name, response in zip(task_names, responses):
-                results[task_name] = response
-        
-        # 기본 return structure
-        return {
-            "taskId": task_id,
-            "status": "pending",
-            "message": "AI 컨텐츠 생성이 시작되었습니다.",
-            "data": results,
-        }
 
     def _build_backend_headers(self) -> Dict[str, str]:
         headers = {
