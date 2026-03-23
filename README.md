@@ -31,24 +31,16 @@ Hear_AI는 감정 기반 AI 일기 작성 / 이미지 및 스티커 생성 서�
 1. `.env` 파일 필수
    - `GEMINI_API_KEY` (Gemini API 키)
    - `IMAGE_GEMINI_API_KEY` (AI 이미지 API 키)
-   - `SPRING_BACKEND_URL` (백엔드 URL, 기본 `http://localhost:8080`)
 2. 종속성
    - Python 패키지: `requirements.txt` 참고
 
 ## 실행 방법
-```powershell
-cd c:\Users\user\Documents\project\Hear\Hear_AI
-.venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-uvicorn server.app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-또는 Docker:
+Docker:
 ```bash
 docker-compose up --build
 ```
 
 ## 엔드포인트
-- GET `/health`: 헬스 체크
 - POST `/internal/v1/chats/messages`: 음성/텍스트 일기 대화
 - POST `/api/v1/diaries`: 일기 생성
 - POST `/internal/images/generate`: 이미지 생성 ## 비동기
@@ -62,16 +54,4 @@ docker-compose up --build
 - `server/app/service/diary_service.py` : generate + callback 로직
 - `server/app/router/diary_router.py` : 비동기 작업 큐 + 상태 저장
 
-## 개선 / 주의 사항
-- 스티커 생성 시 `503 UNAVAILABLE` (모델 과부하) 처리 필요
-- 콜백 재시도 로직 추가 필요 (현재 1회, 결과는 로그 처리)
-- `tasks_store` 메모리 상태이므로 프로덕션시 Redis/DB 로 대체 권장
-
-## 테스트
-- `python -m pytest` (테스트가 있는 경우)
-- `pyflakes` / `mypy` 코드 린트 권장
-
-## 기타
-- `REFACTORING_SUMMARY.md`, `ARCHITECTURE.md` 문서가 현재 구현 상태와 동기화되어 있습니다.
-- 로그는 `print` 및 `logging` 혼용되어 있으므로 `logging` 통일 추천.
 
