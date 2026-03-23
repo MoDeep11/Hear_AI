@@ -9,7 +9,7 @@ import dotenv
 import asyncio
 from typing import Optional
 from pydantic import BaseModel
-from IPython.display import display, Markdown
+from IPython.display import display, Markdown, HTML
 import pathlib
 
 from google import genai
@@ -32,13 +32,15 @@ def display_response(response):
 # Save the image
 # If there are multiple ones, only the last one will be saved
 async def save_image(response, path):
+  # Create parent directory if it doesn't exist
+  os.makedirs(os.path.dirname(path), exist_ok=True)
   for part in response.parts:
     if image:= part.as_image():
       image.save(path)
 
 # Gemini API 설정
 dotenv.load_dotenv()  # .env 파일에서 환경 변수 로드
-GOOGLE_API_KEY = os.getenv("GEMINI_API_KEY")
+GOOGLE_API_KEY = os.getenv("IMAGE_GEMINI_API_KEY")
 GEMINI3_MODEL_ID = "gemini-3-flash-preview"
 NANO_BANANA_MODEL = "gemini-3.1-flash-image-preview"
 
@@ -95,11 +97,11 @@ class ImageGenerator:
                     response_modalities=["IMAGE"],
                 ),
             )
-            await save_image(response, f"./test/generated_image_{request.diaryId}_{request.userId}.png")
+            await save_image(response, f"./static/temp/generated_image_{request.diaryId}_{request.userId}.png")
 
             # 실제 이미지 URL 생성 (예시로 하드코딩)
             image_urls = [
-                f"HEAR_AI/test/generated_image_{request.diaryId}_{request.userId}.jpg"
+                f"HEAR_AI/static/temp/generated_image_{request.diaryId}_{request.userId}.png"
             ]
 
             return {

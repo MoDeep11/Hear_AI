@@ -8,3 +8,4 @@ python-multipart==0.0.22
 edge_tts==7.2.7
 aiofiles==25.1.0
 IPython==8.0.0
+pillow==12.1.1

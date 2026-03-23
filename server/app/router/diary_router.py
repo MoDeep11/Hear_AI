@@ -59,7 +59,6 @@ class StickerGenerateRequest(BaseModel):
     diaryId: int
     emotion: str
     content: str
-    count: int = 1
 
 
 class ImageGenerateRequest(BaseModel):
@@ -170,7 +169,6 @@ async def generate_sticker(request: StickerGenerateRequest, background_tasks: Ba
         diary_id=request.diaryId,
         emotion=request.emotion,
         content=request.content,
-        count=request.count,
     )
 
     tasks_store[task_id] = {
@@ -186,7 +184,7 @@ async def generate_sticker(request: StickerGenerateRequest, background_tasks: Ba
     )
 
 
-@Yuwon_router.post("/images/generate", response_model=AsyncResponse, status_code=202, tags=["diarys"])
+@Yuwon_router.post("/images/generate", response_model=AsyncResponse, status_code=202, tags=["Image"])
 async def generate_image(request: ImageGenerateRequest, background_tasks: BackgroundTasks):
     """
     이미지 생성 요청
@@ -220,17 +218,6 @@ async def generate_image(request: ImageGenerateRequest, background_tasks: Backgr
     )
 
 
-@Yuwon_router.get("/task/{task_id}", tags=["tasks"])
-async def get_task_status(task_id: str):
-    """
-    작업 상태 조회
-    
-    - task_id: 작업 ID
-    """
-    if task_id not in tasks_store:
-        raise HTTPException(status_code=404, detail="작업을 찾을 수 없습니다.")
-    
-    return tasks_store[task_id]
 
 
 # 백그라운드 작업 함수들
@@ -239,22 +226,28 @@ async def process_sticker_generation(
     user_id: int,
     diary_id: int,
     emotion: str,
-    content: str,
-    count: int,
+    content: str
 ):
     """스티커 생성 백그라운드 작업"""
     print(f"[Router] process_sticker_generation started (task_id={task_id})")
     try:
-        result = await diary_service.generate_stickers(user_id, diary_id, emotion, content, count)
+        result = await diary_service.generate_stickers(user_id, diary_id, emotion, content)
         print(f"[Router] generate_stickers result: {result}")
         # 스티커 생성이 완료되면 Spring 서버에 콜백
         print(f"[Router] calling patch_sticker_callback for task_id={task_id}")
-        await diary_service.patch_sticker_callback(
-            diary_id=diary_id,
-            task_id=task_id,
-            user_id=user_id,
-            stickers=result.get("stickers", []),
-        )
+        try:
+            await diary_service.patch_sticker_callback(
+                diary_id=diary_id,
+                task_id=task_id,
+                user_id=user_id,
+                stickers=result.get("stickers", []),
+            )
+            print(f"[Router] patch_sticker_callback succeeded (task_id={task_id})")
+        except Exception as callback_error:
+            print(f"[Router] patch_sticker_callback error (task_id={task_id}): {callback_error}")
+            logger.error(f"[Router] callback error: {callback_error}")
+            # 콜백 실패해도 작업은 완료로 표시
+        
         tasks_store[task_id] = {
             "taskId": task_id,
             "status": "completed",
@@ -264,6 +257,7 @@ async def process_sticker_generation(
         return result
     except Exception as e:
         print(f"[Router] process_sticker_generation failed (task_id={task_id}): {e}")
+        logger.error(f"[Router] sticker generation error: {e}")
         tasks_store[task_id] = {
             "taskId": task_id,
             "status": "failed",
@@ -286,12 +280,19 @@ async def process_image_generation(
         print(f"[Router] generate_image result: {result}")
         # 이미지 생성이 완료되면 Spring 서버에 콜백
         print(f"[Router] calling patch_image_callback for task_id={task_id}")
-        await diary_service.patch_image_callback(
-            diary_id=diary_id,
-            task_id=task_id,
-            user_id=user_id,
-            imageUrls=result.get("imageUrls", []),
-        )
+        try:
+            await diary_service.patch_image_callback(
+                diary_id=diary_id,
+                task_id=task_id,
+                user_id=user_id,
+                imageUrls=result.get("imageUrls", []),
+            )
+            print(f"[Router] patch_image_callback succeeded (task_id={task_id})")
+        except Exception as callback_error:
+            print(f"[Router] patch_image_callback error (task_id={task_id}): {callback_error}")
+            logger.error(f"[Router] callback error: {callback_error}")
+            # 콜백 실패해도 작업은 완료로 표시
+        
         tasks_store[task_id] = {
             "taskId": task_id,
             "status": "completed",
@@ -301,6 +302,7 @@ async def process_image_generation(
         return result
     except Exception as e:
         print(f"[Router] process_image_generation failed (task_id={task_id}): {e}")
+        logger.error(f"[Router] image generation error: {e}")
         tasks_store[task_id] = {
             "taskId": task_id,
             "status": "failed",
