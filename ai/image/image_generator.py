@@ -15,10 +15,9 @@ import pathlib
 from google import genai
 from google.genai import types
 
-# Loop over all parts and display them either as text or images
 def display_response(response):
   for part in response.parts:
-    if part.thought: # We don't want to see the thoughts
+    if part.thought:
       continue
     if part.text:
       display(Markdown(part.text))
