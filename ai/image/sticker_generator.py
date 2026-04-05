@@ -38,6 +38,10 @@ async def save_image(response, path):
     if image:= part.as_image():
       image.save(path)
 
+# 로컬 저장 경로 정의 (절대 경로)
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+TEMP_DIR = os.path.join(BASE_DIR, "static", "temp")
+
 # Gemini API 설정
 dotenv.load_dotenv()  # .env 파일에서 환경 변수 로드
 GOOGLE_API_KEY = os.getenv("IMAGE_GEMINI_API_KEY")
@@ -102,7 +106,9 @@ class StickerGenerator:
         if not desc:
             desc = request.content
 
-        emotion_image = PIL.Image.open(f'./ai/image/emotion_characters/{request.emotion}.png')
+        # 감정명 정규화 (ANXIOUS -> ANXIETY 등)
+        normalized_emotion = self._normalize_emotion(request.emotion)
+        emotion_image = PIL.Image.open(f'./ai/image/emotion_characters/{normalized_emotion}.png')
         keyword_path = os.path.join(os.path.dirname(__file__), "../prompts/sticker_generation.txt")
         with open(keyword_path, "r", encoding="utf-8") as f:
             keyword_gen = f.read()
@@ -115,7 +121,9 @@ class StickerGenerator:
             ),
         )
 
-        await save_image(image_response, f"./static/temp/generated_sticker_{request.diaryId}_{request.userId}_1.png")
+        os.makedirs(TEMP_DIR, exist_ok=True)
+        local_file = os.path.join(TEMP_DIR, f"generated_sticker_{request.diaryId}_{request.userId}_1.png")
+        await save_image(image_response, local_file)
 
         image_text_parts = [part.text for part in image_response.parts if part.text]
         description = " ".join(image_text_parts)
@@ -123,11 +131,25 @@ class StickerGenerator:
         stickers = [{
             "imageUrl": f"https://s3.ap-northeast-2.amazonaws.com/bucket/ai-gen/sticker_{request.diaryId}_{request.userId}_1.png",
             "keyword": description,
+            "localPath": local_file,
         }]
 
         return {
             "stickers": stickers,
         }
+    
+    def _normalize_emotion(self, emotion: str) -> str:
+        """감정 이름 정규화 (예: ANXIOUS -> ANXIETY)"""
+        # 가능한 감정 매핑
+        emotion_map = {
+            "ANXIOUS": "ANXIETY",
+            "ANXIETY": "ANXIETY",
+            "HAPPY": "HAPPY",
+            "SAD": "SAD",
+            "ANGRY": "ANGRY",
+            "NEUTRAL": "NEUTRAL",
+        }
+        return emotion_map.get(emotion, emotion)
 
 
 # 싱글톤 인스턴스

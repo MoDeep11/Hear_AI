@@ -140,14 +140,13 @@ class DiaryService:
         )
         return await image_generator.generate(request)
     
-    async def generate_stickers(self, user_id: int, diary_id: int, emotion: str, content: str, count: int) -> Dict:
+    async def generate_stickers(self, user_id: int, diary_id: int, emotion: str, content: str) -> Dict:
         """스티커 생성"""
         request = StickerGenerationRequest(
             userId=user_id,
             diaryId=diary_id,
             emotion=emotion,
             content=content,
-            count=count,
         )
         return await sticker_generator.generate(request)
 
