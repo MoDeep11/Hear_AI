@@ -37,6 +37,10 @@ async def save_image(response, path):
     if image:= part.as_image():
       image.save(path)
 
+# 로컬 저장 경로 정의 (절대 경로)
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+TEMP_DIR = os.path.join(BASE_DIR, "static", "temp")
+
 # Gemini API 설정
 dotenv.load_dotenv()  # .env 파일에서 환경 변수 로드
 GOOGLE_API_KEY = os.getenv("IMAGE_GEMINI_API_KEY")
@@ -96,7 +100,9 @@ class ImageGenerator:
                     response_modalities=["IMAGE"],
                 ),
             )
-            await save_image(response, f"./static/temp/generated_image_{request.diaryId}_{request.userId}.png")
+            os.makedirs(TEMP_DIR, exist_ok=True)
+            local_file = os.path.join(TEMP_DIR, f"generated_image_{request.diaryId}_{request.userId}.png")
+            await save_image(response, local_file)
 
             # 실제 이미지 URL 생성 (예시로 하드코딩)
             image_urls = [
@@ -105,6 +111,7 @@ class ImageGenerator:
 
             return {
                 "imageUrls": image_urls,
+                "localPath": local_file,
             }
 
         except Exception as e:
