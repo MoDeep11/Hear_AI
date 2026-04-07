@@ -15,6 +15,15 @@ import pathlib
 from google import genai
 from google.genai import types
 
+from boto3 import client
+import io
+from PIL import Image
+
+dotenv.load_dotenv()  # .env 파일에서 환경 변수 로드
+AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
+AWS_SECRET_KEY = os.getenv("AWS_SECRET_KEY")
+AWS_S3_BUCKET = os.getenv("AWS_S3_BUCKET")
+
 # Loop over all parts and display them either as text or images
 def display_response(response):
   for part in response.parts:
@@ -34,7 +43,31 @@ def display_response(response):
 async def save_image(response, path):
   for part in response.parts:
     if image:= part.as_image():
-      image.save(path)
+    #   image.save(path)
+        upload_to_s3(convert_image_to_bytes(image), AWS_S3_BUCKET, path)
+
+s3_client = client(
+    "s3",
+    aws_access_key_id=AWS_ACCESS_KEY,
+    aws_secret_access_key=AWS_SECRET_KEY,
+    region_name="ap-northeast-2",
+)
+ 
+def upload_to_s3(file: io.BytesIO, bucket_name: str, file_name: str) -> None:
+    s3_client.upload_fileobj(
+        file,
+        bucket_name,
+        file_name,
+        ExtraArgs={"ContentType": "image/png"},
+    )
+
+def convert_image_to_bytes(image: Image) -> io.BytesIO:
+    img_byte = io.BytesIO()
+    image.save(img_byte, "png", quality=70)
+    img_byte.seek(0)
+    return img_byte
+
+
 
 # Gemini API 설정
 dotenv.load_dotenv()  # .env 파일에서 환경 변수 로드

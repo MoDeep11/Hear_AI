@@ -160,7 +160,7 @@ async def generate_sticker(request: StickerGenerateRequest, background_tasks: Ba
     - content: 일기 내용
     - count: 생성할 스티커 개수 (기본: 1, 최대: 5)
     """
-    task_id = f"sticker_task_{request.diaryId}_{request.userId}"
+    task_id = f"sticker_task_{uuid.uuid4()}_{uuid.uuid4()}"
 
     # 백그라운드 작업으로 실행
     background_tasks.add_task(
@@ -196,7 +196,7 @@ async def generate_image(request: ImageGenerateRequest, background_tasks: Backgr
     - emotion: 감정 (HAPPY, SAD, ANGRY, ANXIOUS, NORMAL)
     - content: 일기 내용
     """
-    task_id = f"image_task_{request.diaryId}_{request.userId}"
+    task_id = f"image_task_{uuid.uuid4()}_{uuid.uuid4()}"
 
     background_tasks.add_task(
         process_image_generation,
