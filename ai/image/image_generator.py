@@ -3,7 +3,7 @@ Gemini API를 사용한 이미지 생성 모듈
 일기 내용을 바탕으로 AI 이미지를 생성합니다.
 """
 
-import logging
+import logging  
 import os
 import dotenv
 import asyncio
@@ -14,6 +14,7 @@ import pathlib
 
 from google import genai
 from google.genai import types
+from ai.utils.s3_uploader import s3_uploader
 
 def display_response(response):
   for part in response.parts:
@@ -104,8 +105,9 @@ class ImageGenerator:
             local_file = os.path.join(TEMP_DIR, f"generated_image_{request.diaryId}_{request.userId}.png")
             await save_image(response, local_file)
 
-            # 실제 이미지 URL 생성 (예시로 하드코딩)
-            image_urls = [
+            s3_key = f"ai-gen/images/diary_{request.diaryId}_{request.userId}.png"
+            s3_url = await s3_uploader.upload_file(local_file, s3_key)
+            image_urls = [s3_url] if s3_url else [
                 f"HEAR_AI/static/temp/generated_image_{request.diaryId}_{request.userId}.png"
             ]
 

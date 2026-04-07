@@ -14,3 +14,4 @@ edge_tts==7.2.7
 aiofiles==25.1.0
 IPython==8.0.0
 pillow==12.1.1
+boto3==1.42.83
