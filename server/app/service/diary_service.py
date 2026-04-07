@@ -49,7 +49,7 @@ class DiaryService:
         self.temp_dir = "static/temp"
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir, exist_ok=True)
-        self.backend_url = os.getenv("SPRING_BACKEND_URL", "http://localhost:8080")
+        self.backend_url = os.getenv("SPRING_BACKEND_URL")
         self.api_key = os.getenv("API_KEY", "")
 
     async def process_voice_diary(self, chat_data):

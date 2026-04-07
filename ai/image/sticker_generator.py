@@ -14,6 +14,7 @@ from IPython.display import display, Markdown, HTML
 import pathlib
 import dotenv
 import re
+from ai.utils.s3_uploader import s3_uploader
 
 # Loop over all parts and display them either as text or images
 def display_response(response):
@@ -128,8 +129,11 @@ class StickerGenerator:
         image_text_parts = [part.text for part in image_response.parts if part.text]
         description = " ".join(image_text_parts)
 
+        s3_key = f"ai-gen/stickers/sticker_{request.diaryId}_{request.userId}_1.png"
+        s3_url = await s3_uploader.upload_file(local_file, s3_key)
+
         stickers = [{
-            "imageUrl": f"https://s3.ap-northeast-2.amazonaws.com/bucket/ai-gen/sticker_{request.diaryId}_{request.userId}_1.png",
+            "imageUrl": s3_url,
             "keyword": description,
             "localPath": local_file,
         }]
