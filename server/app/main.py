@@ -57,35 +57,3 @@ app.include_router(diary_api_router)
 app.include_router(feedback_router)
 app.include_router(report_router)
 app.include_router(Yuwon_router)
-
-
-@app.get("/health")
-async def health_check():
-    """헬스 체크"""
-    return {"status": "ok"}
-
-
-@app.get("/")
-async def root():
-    """루트 엔드포인트"""
-    return {
-        "message": "HEAR! AI Server",
-        "version": "1.0.0",
-    }
-
-
-if __name__ == "__main__":
-    import uvicorn
-    
-    # 환경변수에서 설정 로드
-    host = os.getenv("HOST", "0.0.0.0")
-    port = int(os.getenv("PORT", 8000))
-    reload = os.getenv("RELOAD", "True").lower() == "true"
-    
-    uvicorn.run(
-        "main:app",
-        host=host,
-        port=port,
-        reload=reload,
-    )
-

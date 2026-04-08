@@ -49,7 +49,7 @@ class DiaryService:
         self.temp_dir = "static/temp"
         if not os.path.exists(self.temp_dir):
             os.makedirs(self.temp_dir, exist_ok=True)
-        self.backend_url = os.getenv("SPRING_BACKEND_URL", "http://localhost:8080")
+        self.backend_url = os.getenv("SPRING_BACKEND_URL")
         self.api_key = os.getenv("API_KEY", "")
 
     async def process_voice_diary(self, chat_data):
@@ -140,14 +140,13 @@ class DiaryService:
         )
         return await image_generator.generate(request)
     
-    async def generate_stickers(self, user_id: int, diary_id: int, emotion: str, content: str, count: int) -> Dict:
+    async def generate_stickers(self, user_id: int, diary_id: int, emotion: str, content: str) -> Dict:
         """스티커 생성"""
         request = StickerGenerationRequest(
             userId=user_id,
             diaryId=diary_id,
             emotion=emotion,
             content=content,
-            count=count,
         )
         return await sticker_generator.generate(request)
 
@@ -162,22 +161,33 @@ class DiaryService:
     async def patch_image_callback(self, diary_id: int, task_id: str, user_id: int, imageUrls: list):
         """Spring 백엔드에 이미지 생성 완료를 알리는 콜백"""
         url = f"{self.backend_url}/internal/v1/diaries/images"
+        status = "success" if imageUrls else "failed"
         payload = {
             "diaryId": diary_id,
-            "taskId": task_id,
-            "userId": user_id,
-            "imageUrls": imageUrls,
+            "status": status,
+            "imageUrl": imageUrls[0] if imageUrls else "",
         }
 
         # 비동기 흐름 확인용 로그
         print(f"[DiaryService] patch_image_callback called (task_id={task_id})")
         print(f"[DiaryService] patch_image_callback payload={payload}")
+        print(f"[DiaryService] patch_image_callback backend_url={url}")
 
-        async with httpx.AsyncClient(timeout=30) as client:
-            response = await client.patch(url, json=payload, headers=self._build_backend_headers())
-            response.raise_for_status()
-            print(f"[DiaryService] patch_image_callback response={response.status_code}")
-            return response.json()
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                response = await client.patch(url, json=payload, headers=self._build_backend_headers())
+                response.raise_for_status()
+                print(f"[DiaryService] patch_image_callback response={response.status_code}")
+                return response.json()
+        except httpx.TimeoutException as e:
+            logger.error(f"[DiaryService] patch_image_callback timeout: {str(e)}")
+            return {"status": "callback_timeout", "error": str(e)}
+        except httpx.ConnectError as e:
+            logger.error(f"[DiaryService] patch_image_callback connection error: {str(e)}")
+            return {"status": "callback_connection_error", "error": str(e)}
+        except Exception as e:
+            logger.error(f"[DiaryService] patch_image_callback error: {str(e)}")
+            return {"status": "callback_error", "error": str(e)}
 
     async def patch_sticker_callback(self, diary_id: int, task_id: str, user_id: int, stickers: list):
         """Spring 백엔드에 스티커 생성 완료를 알리는 콜백"""
@@ -192,12 +202,23 @@ class DiaryService:
         # 비동기 흐름 확인용 로그
         print(f"[DiaryService] patch_sticker_callback called (task_id={task_id})")
         print(f"[DiaryService] patch_sticker_callback payload={payload}")
+        print(f"[DiaryService] patch_sticker_callback backend_url={url}")
 
-        async with httpx.AsyncClient(timeout=30) as client:
-            response = await client.patch(url, json=payload, headers=self._build_backend_headers())
-            response.raise_for_status()
-            print(f"[DiaryService] patch_sticker_callback response={response.status_code}")
-            return response.json()
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                response = await client.patch(url, json=payload, headers=self._build_backend_headers())
+                response.raise_for_status()
+                print(f"[DiaryService] patch_sticker_callback response={response.status_code}")
+                return response.json()
+        except httpx.TimeoutException as e:
+            logger.error(f"[DiaryService] patch_sticker_callback timeout: {str(e)}")
+            return {"status": "callback_timeout", "error": str(e)}
+        except httpx.ConnectError as e:
+            logger.error(f"[DiaryService] patch_sticker_callback connection error: {str(e)}")
+            return {"status": "callback_connection_error", "error": str(e)}
+        except Exception as e:
+            logger.error(f"[DiaryService] patch_sticker_callback error: {str(e)}")
+            return {"status": "callback_error", "error": str(e)}
 
     async def send_to_backend(self, request: DiaryServiceRequest, access_token: str) -> Dict[str, Any]:
         """일기 생성 시 Spring 백엔드로 데이터 전송 (기존 구현 대비 최소화)"""
