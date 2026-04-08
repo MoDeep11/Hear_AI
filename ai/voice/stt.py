@@ -1,17 +1,28 @@
-import whisper
-import torch
+from faster_whisper import WhisperModel
+import os
 
-class   STTService:
+class STTService:
     def __init__(self):
-        # GPU 사용 가능 시 GPU 사용, 아니면 CPU 사용
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.model = whisper.load_model("base").to(self.device)
+        self.model_size = "base" 
+        
+        self.model = WhisperModel(
+            self.model_size, 
+            device="cpu", 
+            compute_type="int8",
+            download_root="./models" # 모델 저장 경로 지정 (선택사항)
+        )
 
     async def transcribe(self, file_path: str) -> str:
         try:
-            # fp16=False는 CPU 환경에서 경고를 방지하기 위함
-            result = self.model.transcribe(file_path, language="ko", fp16=False)
-            return result["text"].strip()
+            segments, info = self.model.transcribe(
+                file_path, 
+                language="ko", 
+                beam_size=5
+            )
+
+            text = "".join([segment.text for segment in segments])
+            return text.strip()
+            
         except Exception as e:
             print(f"STT Error: {e}")
             return ""
