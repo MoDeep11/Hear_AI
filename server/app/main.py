@@ -63,6 +63,10 @@ async def upload_test():
     # print(a.decode())
     plt.imshow(Image.open(BytesIO(a)))
     plt.show()
+    
+@app.get("/health")
+async def health_check():
+    return {"status": "ok"}
 
 # 라우터 등록 및 정적 파일 설정
 app.mount("/static", StaticFiles(directory="static"), name="static")
