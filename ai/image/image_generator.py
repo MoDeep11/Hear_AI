@@ -18,6 +18,7 @@ from ai.utils.s3_uploader import s3_uploader
 from boto3 import client
 import io
 from PIL import Image
+import uuid
 
 dotenv.load_dotenv()  # .env 파일에서 환경 변수 로드
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
@@ -131,14 +132,20 @@ class ImageGenerator:
                 ),
             )
             os.makedirs(TEMP_DIR, exist_ok=True)
-            local_file = os.path.join(TEMP_DIR, f"generated_image_{request.diaryId}_{request.userId}.png")
+            id1 = uuid.uuid4()
+            id2 = uuid.uuid4()
+            local_file = os.path.join(TEMP_DIR, f"generated_image_{id1}_{id2}.png")
             await save_image(response, local_file)
 
-            s3_key = f"ai-gen/images/diary_{request.diaryId}_{request.userId}.png"
+            s3_key = f"ai-gen/images/diary_{id1}_{id2}.png"
             s3_url = await s3_uploader.upload_file(local_file, s3_key)
             image_urls = [s3_url] if s3_url else [
-                f"HEAR_AI/static/temp/generated_image_{request.diaryId}_{request.userId}.png"
+                f"HEAR_AI/static/temp/generated_image_{id1}_{id2}.png"
             ]
+
+            # S3 업로드 후 로컬 파일 삭제
+            if os.path.exists(local_file):
+                os.remove(local_file)
 
             return {
                 "imageUrls": image_urls,
