@@ -14,3 +14,12 @@ services:
     environment:
       - PYTHONUNBUFFERED=1 # 로그가 실시간으로 터미널에 찍히게 함
     restart: always
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - ai-server
