@@ -139,9 +139,7 @@ class ImageGenerator:
 
             s3_key = f"ai-gen/images/diary_{id1}_{id2}.png"
             s3_url = await s3_uploader.upload_file(local_file, s3_key)
-            image_urls = [s3_url] if s3_url else [
-                f"HEAR_AI/static/temp/generated_image_{id1}_{id2}.png"
-            ]
+            image_urls = [s3_url]
 
             # S3 업로드 후 로컬 파일 삭제
             if os.path.exists(local_file):

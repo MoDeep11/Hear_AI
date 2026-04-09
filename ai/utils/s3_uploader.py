@@ -25,10 +25,10 @@ class S3Uploader:
                 self.bucket_name,
                 s3_key,
             )
-            print(res)
-            return local_path
-            # return f"https://{self.bucket_name}.s3.ap-northeast-2.amazonaws.com/{s3_key}"
-            return f"실패"
+            # print(res)
+            # return local_path
+            return f"https://{self.bucket_name}.s3.ap-northeast-2.amazonaws.com/{s3_key}"
+            # return f"실패"
         except Exception as e:
             print(f"S3 업로드 에러: {e}")
             return ""
