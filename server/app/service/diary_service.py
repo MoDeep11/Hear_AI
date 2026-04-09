@@ -160,12 +160,12 @@ class DiaryService:
 
     async def patch_image_callback(self, diary_id: int, task_id: str, user_id: int, imageUrls: list):
         """Spring 백엔드에 이미지 생성 완료를 알리는 콜백"""
-        url = f"{self.backend_url}/internal/diary/{diary_id}/ai-image"
+        url = f"{self.backend_url}/internal/v1/diaries/images"
+        status = "success" if imageUrls else "failed"
         payload = {
             "diaryId": diary_id,
-            "taskId": task_id,
-            "userId": user_id,
-            "imageUrls": imageUrls,
+            "status": status,
+            "imageUrl": imageUrls[0] if imageUrls else "",
         }
 
         # 비동기 흐름 확인용 로그

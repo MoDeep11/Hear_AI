@@ -59,6 +59,7 @@ class StickerGenerateRequest(BaseModel):
     diaryId: int
     emotion: str
     content: str
+    count: int = 1
 
 
 class ImageGenerateRequest(BaseModel):
@@ -97,7 +98,6 @@ stt_service = STTService()
 tts_service = TTSService()
 generator = DiaryGenerator(api_key=API_KEY)
 diary_service = DiaryService(generator=generator, stt_service=stt_service, tts_service=tts_service)
-
 
 @router.post("/messages")
 async def handle_voice_message(request: ChatRequest):
