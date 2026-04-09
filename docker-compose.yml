@@ -32,5 +32,5 @@ services:
     environment:
       - DOCKER_API_VERSION=1.40
       - WATCHTOWER_POLL_INTERVAL=60
-    command: --interval 30 --cleanup
+    command: --interval 60 --cleanup
     restart: always
