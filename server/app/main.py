@@ -8,9 +8,9 @@ import os
 import sys
 from fastapi.staticfiles import StaticFiles
 from dotenv import load_dotenv
-from io import BytesIO
-from matplotlib import pyplot as plt
-from PIL import Image
+# from io import BytesIO
+# from matplotlib import pyplot as plt
+# from PIL import Image
 
 # 프로젝트 경로 설정
 current_path = os.path.dirname(os.path.abspath(__file__))
@@ -53,17 +53,17 @@ app.add_middleware(
 )
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 TEMP_DIR = os.path.join(BASE_DIR, "static", "temp")
-@app.post("/upload_test")
-async def upload_test():
-    local_file = os.path.join(TEMP_DIR, f"generated_image_{123}_{1233}.png")
-    s3_key = f"ai-gen/images/diary_{123}_{1233}.png"
-    s3_url = await s3_uploader.s3_uploader.upload_file(local_file, s3_key)
-    a = s3_uploader.s3_uploader.get_file(s3_key)
-    print(type(a))
-    # print(a.decode())
-    plt.imshow(Image.open(BytesIO(a)))
-    plt.show()
-    
+# @app.post("/upload_test")
+# async def upload_test():
+#     local_file = os.path.join(TEMP_DIR, f"generated_image_{123}_{1233}.png")
+#     s3_key = f"ai-gen/images/diary_{123}_{1233}.png"
+#     s3_url = await s3_uploader.s3_uploader.upload_file(local_file, s3_key)
+#     a = s3_uploader.s3_uploader.get_file(s3_key)
+#     print(type(a))
+#     # print(a.decode())
+#     plt.imshow(Image.open(BytesIO(a)))
+#     plt.show()
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok"}
