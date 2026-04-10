@@ -89,7 +89,7 @@ class AsyncResponse(BaseModel):
 
 # 라우터 설정
 Yuwon_router = APIRouter(
-    prefix="/internal",
+    prefix="/internal/v1",
 )
 router = APIRouter(prefix="/internal/v1/chats", tags=["Chat/Diary"])
 
@@ -149,7 +149,7 @@ async def create_diary(request: CreateDiaryRequest):
 # 진행 중인 작업들을 추적하기 위한 간단한 저장소
 tasks_store = {}
 
-@Yuwon_router.post("/v1/sticker/generate", response_model=AsyncResponse, status_code=202, tags=["stickers"])
+@Yuwon_router.post("/stickers", response_model=AsyncResponse, status_code=202, tags=["stickers"])
 async def generate_sticker(request: StickerGenerateRequest, background_tasks: BackgroundTasks):
     """
     스티커 생성 요청
@@ -184,7 +184,7 @@ async def generate_sticker(request: StickerGenerateRequest, background_tasks: Ba
     )
 
 
-@Yuwon_router.post("/images/generate", response_model=AsyncResponse, status_code=202, tags=["Image"])
+@Yuwon_router.post("/images", response_model=AsyncResponse, status_code=202, tags=["Image"])
 async def generate_image(request: ImageGenerateRequest, background_tasks: BackgroundTasks):
     """
     이미지 생성 요청
