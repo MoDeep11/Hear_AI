@@ -55,6 +55,7 @@ class StickerGenerationRequest(BaseModel):
     diaryId: int
     emotion: str
     content: str
+    taskId: str
 
 
 class StickerGenerator:
@@ -123,19 +124,22 @@ class StickerGenerator:
         )
 
         os.makedirs(TEMP_DIR, exist_ok=True)
-        local_file = os.path.join(TEMP_DIR, f"generated_sticker_{request.diaryId}_{request.userId}_1.png")
+        local_file = os.path.join(TEMP_DIR, f"generated_sticker_{request.taskId}.png")
         await save_image(image_response, local_file)
 
         image_text_parts = [part.text for part in image_response.parts if part.text]
         description = " ".join(image_text_parts)
 
-        s3_key = f"ai-gen/stickers/sticker_{request.diaryId}_{request.userId}_1.png"
+        s3_key = f"ai-gen/stickers/{request.taskId}.png"
         s3_url = await s3_uploader.upload_file(local_file, s3_key)
+
+        # S3 업로드 후 로컬 파일 삭제
+        if os.path.exists(local_file):
+            os.remove(local_file)
 
         stickers = [{
             "imageUrl": s3_url,
             "keyword": description,
-            "localPath": local_file,
         }]
 
         return {

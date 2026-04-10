@@ -18,7 +18,6 @@ from ai.utils.s3_uploader import s3_uploader
 from boto3 import client
 import io
 from PIL import Image
-import uuid
 
 dotenv.load_dotenv()  # .env 파일에서 환경 변수 로드
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY")
@@ -83,6 +82,7 @@ class ImageGenerationRequest(BaseModel):
     userId: int
     emotion: str
     content: str
+    taskId: str
 
 
 class ImageGenerator:
@@ -132,12 +132,10 @@ class ImageGenerator:
                 ),
             )
             os.makedirs(TEMP_DIR, exist_ok=True)
-            id1 = uuid.uuid4()
-            id2 = uuid.uuid4()
-            local_file = os.path.join(TEMP_DIR, f"generated_image_{id1}_{id2}.png")
+            local_file = os.path.join(TEMP_DIR, f"generated_image_{request.taskId}.png")
             await save_image(response, local_file)
 
-            s3_key = f"ai-gen/images/diary_{id1}_{id2}.png"
+            s3_key = f"ai-gen/images/{request.taskId}.png"
             s3_url = await s3_uploader.upload_file(local_file, s3_key)
             image_urls = [s3_url]
 
