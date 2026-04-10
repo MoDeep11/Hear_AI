@@ -130,13 +130,14 @@ class DiaryService:
                 "tags": []
             }        
     
-    async def generate_image(self, user_id: int, diary_id: int, emotion: str, content: str) -> Dict:
+    async def generate_image(self, user_id: int, diary_id: int, emotion: str, content: str, task_id: str) -> Dict:
         """이미지 생성"""
         request = ImageGenerationRequest(
             diaryId=diary_id,
             userId=user_id,
             emotion=emotion,
             content=content,
+            taskId=task_id,
         )
         return await image_generator.generate(request)
     
