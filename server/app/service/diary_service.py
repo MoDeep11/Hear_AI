@@ -140,13 +140,14 @@ class DiaryService:
         )
         return await image_generator.generate(request)
     
-    async def generate_stickers(self, user_id: int, diary_id: int, emotion: str, content: str) -> Dict:
+    async def generate_stickers(self, user_id: int, diary_id: int, emotion: str, content: str, task_id: str) -> Dict:
         """스티커 생성"""
         request = StickerGenerationRequest(
             userId=user_id,
             diaryId=diary_id,
             emotion=emotion,
             content=content,
+            taskId=task_id,
         )
         return await sticker_generator.generate(request)
 
@@ -191,12 +192,20 @@ class DiaryService:
 
     async def patch_sticker_callback(self, diary_id: int, task_id: str, user_id: int, stickers: list):
         """Spring 백엔드에 스티커 생성 완료를 알리는 콜백"""
-        url = f"{self.backend_url}/internal/diary/{diary_id}/ai-image"
+        url = f"{self.backend_url}/internal/v1/stickers"
+        if stickers:
+            image_url = stickers[0]["imageUrl"]
+            keyword = stickers[0]["keyword"]
+        else:
+            image_url = ""
+            keyword = ""
         payload = {
-            "diaryId": diary_id,
             "taskId": task_id,
             "userId": user_id,
-            "stickers": stickers,
+            "diaryId": diary_id,
+            "status": "success",
+            "imageUrl": image_url,
+            "keyword": keyword,
         }
 
         # 비동기 흐름 확인용 로그

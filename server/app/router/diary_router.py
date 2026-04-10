@@ -159,7 +159,7 @@ async def generate_sticker(request: StickerGenerateRequest, background_tasks: Ba
     - content: 일기 내용
     - count: 생성할 스티커 개수 (기본: 1, 최대: 5)
     """
-    task_id = f"sticker_task_{request.diaryId}_{request.userId}"
+    task_id = str(uuid.uuid4())
 
     # 백그라운드 작업으로 실행
     background_tasks.add_task(
@@ -231,7 +231,7 @@ async def process_sticker_generation(
     """스티커 생성 백그라운드 작업"""
     print(f"[Router] process_sticker_generation started (task_id={task_id})")
     try:
-        result = await diary_service.generate_stickers(user_id, diary_id, emotion, content)
+        result = await diary_service.generate_stickers(user_id, diary_id, emotion, content, task_id)
         print(f"[Router] generate_stickers result: {result}")
         # 스티커 생성이 완료되면 Spring 서버에 콜백
         print(f"[Router] calling patch_sticker_callback for task_id={task_id}")
