@@ -29,9 +29,9 @@ class ChatGenerator:
             prompt_template = cls._load_prompt()
             final_prompt = prompt_template.format(
                 nickname=user_info.get("nickname"),
-                current_streak=user_info.get("current_streak"),
-                total_diaries=user_info.get("total_diaries"),
-                max_streak=user_info.get("max_streak")
+                current_streak=user_info.get("currentStreak"),
+                total_diaries=user_info.get("totalDiaries"),
+                max_streak=user_info.get("maxStreak")
             )
 
             client = cls._get_client()
