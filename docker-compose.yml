@@ -2,7 +2,8 @@ services:
 
   ai-server:
     build: .
-    container_name: hear_ai_container
+    container_name: hear-ai-container
+    image: hawon223/hear-fastapi-app:latest
     ports:
       - "8000:8000"
     env_file:
@@ -17,6 +18,7 @@ services:
 
   nginx:
     image: nginx:latest
+    container_name: nginx
     ports:
       - "80:80"
     volumes:
@@ -32,5 +34,5 @@ services:
     environment:
       - DOCKER_API_VERSION=1.40
       - WATCHTOWER_POLL_INTERVAL=60
-    command: --interval 30 --cleanup
+    command: --interval 60 --cleanup
     restart: always
