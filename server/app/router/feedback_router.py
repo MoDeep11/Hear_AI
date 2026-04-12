@@ -30,7 +30,7 @@ class DiaryFeedbackResponse(BaseModel):
     aiComment: str
 
 # 라우터 설정
-router = APIRouter(prefix="/internal/diary", tags=["Diary Feedback"])
+router = APIRouter(prefix="/internal/v1/diaries", tags=["Diary Feedback"])
 feedback_service = FeedbackService()
 
 @router.post("/comment", response_model=DiaryFeedbackResponse)
