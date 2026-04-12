@@ -41,7 +41,7 @@ class MessageHistory(BaseModel):
     content: str
 
 class UserInfo(BaseModel):
-    userId: int
+    userId: str
     nickname: str
     streakDays: int
     totalDiaries: int
@@ -55,16 +55,16 @@ class ChatRequest(BaseModel):
     sessionId: str
 
 class StickerGenerateRequest(BaseModel):
-    userId: int
-    diaryId: int
+    userId: str
+    diaryId: str
     emotion: str
     content: str
     count: int = 1
 
 
 class ImageGenerateRequest(BaseModel):
-    diaryId: int
-    userId: int
+    diaryId: str
+    userId: str
     emotion: str
     content: str
 
@@ -223,8 +223,8 @@ async def generate_image(request: ImageGenerateRequest, background_tasks: Backgr
 # 백그라운드 작업 함수들
 async def process_sticker_generation(
     task_id: str,
-    user_id: int,
-    diary_id: int,
+    user_id: str,
+    diary_id: str,
     emotion: str,
     content: str
 ):
@@ -268,8 +268,8 @@ async def process_sticker_generation(
 
 async def process_image_generation(
     task_id: str,
-    diary_id: int,
-    user_id: int,
+    diary_id: str,
+    user_id: str,
     emotion: str,
     content: str,
 ):

@@ -51,8 +51,8 @@ NANO_BANANA_MODEL = "gemini-3.1-flash-image-preview"
 
 
 class StickerGenerationRequest(BaseModel):
-    userId: int
-    diaryId: int
+    userId: str
+    diaryId: str
     emotion: str
     content: str
     taskId: str
