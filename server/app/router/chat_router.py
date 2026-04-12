@@ -8,7 +8,7 @@ router = APIRouter(prefix="/internal/v1", tags=["Chat/Diary"])
 class UserInfo(BaseModel):
     userId: str
     nickname: str
-    currentStreak: int
+    streakDays: int
     totalDiaries: int
     maxStreak: int
 
