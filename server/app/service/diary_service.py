@@ -27,8 +27,8 @@ from ai.image.sticker_generator import sticker_generator, StickerGenerationReque
 
 class DiaryServiceRequest(BaseModel):
     """일기 서비스 통합 요청"""
-    userId: int
-    diaryId: Optional[int] = None
+    userId: str
+    diaryId: Optional[str] = None
     emotion: str
     content: str
     tags: Optional[List[str]] = None
@@ -130,7 +130,7 @@ class DiaryService:
                 "tags": []
             }        
     
-    async def generate_image(self, user_id: int, diary_id: int, emotion: str, content: str, task_id: str) -> Dict:
+    async def generate_image(self, user_id: str, diary_id: str, emotion: str, content: str, task_id: str) -> Dict:
         """이미지 생성"""
         request = ImageGenerationRequest(
             diaryId=diary_id,
@@ -141,7 +141,7 @@ class DiaryService:
         )
         return await image_generator.generate(request)
     
-    async def generate_stickers(self, user_id: int, diary_id: int, emotion: str, content: str, task_id: str) -> Dict:
+    async def generate_stickers(self, user_id: str, diary_id: str, emotion: str, content: str, task_id: str) -> Dict:
         """스티커 생성"""
         request = StickerGenerationRequest(
             userId=user_id,
@@ -160,7 +160,7 @@ class DiaryService:
             headers["Authorization"] = f"Bearer {self.api_key}"
         return headers
 
-    async def patch_image_callback(self, diary_id: int, task_id: str, user_id: int, imageUrls: list):
+    async def patch_image_callback(self, diary_id: str, task_id: str, user_id: str, imageUrls: list):
         """Spring 백엔드에 이미지 생성 완료를 알리는 콜백"""
         url = f"{self.backend_url}/internal/v1/diaries/images"
         status = "success" if imageUrls else "failed"
@@ -191,7 +191,7 @@ class DiaryService:
             logger.error(f"[DiaryService] patch_image_callback error: {str(e)}")
             return {"status": "callback_error", "error": str(e)}
 
-    async def patch_sticker_callback(self, diary_id: int, task_id: str, user_id: int, stickers: list):
+    async def patch_sticker_callback(self, diary_id: str, task_id: str, user_id: str, stickers: list):
         """Spring 백엔드에 스티커 생성 완료를 알리는 콜백"""
         url = f"{self.backend_url}/internal/v1/stickers"
         if stickers:

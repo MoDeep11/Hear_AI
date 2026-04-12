@@ -78,8 +78,8 @@ GEMINI3_MODEL_ID = "gemini-3-flash-preview"
 NANO_BANANA_MODEL = "gemini-3.1-flash-image-preview"
 
 class ImageGenerationRequest(BaseModel):
-    diaryId: int
-    userId: int
+    diaryId: str
+    userId: str
     emotion: str
     content: str
     taskId: str

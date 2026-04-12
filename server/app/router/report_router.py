@@ -16,13 +16,13 @@ from server.app.service.report_service import generate_monthly_ai_report
 router = APIRouter(prefix="/internal/v1/statistics", tags=["Report"])
 
 class DiaryEntry(BaseModel):
-    diaryId: int
+    diaryId: str
     date: str
     content: str
     emotion: str
     
 class MonthlyReportRequest(BaseModel):
-    userId: int
+    userId: str
     yearMonth: str
     diaries: List[DiaryEntry]
     monthlyDiaryCount: int

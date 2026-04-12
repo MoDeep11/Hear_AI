@@ -18,15 +18,15 @@ from service.feedback_service import FeedbackService
 
 # 스키마 정의
 class DiaryFeedbackRequest(BaseModel):
-    diaryId: int
-    userId: int
+    diaryId: str
+    userId: str
     nickname: str
     emotion: str
     content: str
     imageUrls: Optional[List[str]] = []
 
 class DiaryFeedbackResponse(BaseModel):
-    diaryId: int
+    diaryId: str
     aiComment: str
 
 # 라우터 설정
