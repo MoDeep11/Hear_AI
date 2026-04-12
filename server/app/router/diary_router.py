@@ -115,7 +115,7 @@ async def handle_voice_message(request: ChatRequest):
 
 
 # API 엔드포인트 for AI diary creation + emotion inference
-api_router = APIRouter(prefix="/api/v1", tags=["Chat/Diary"])
+api_router = APIRouter(prefix="/internal/v1", tags=["Chat/Diary"])
 
 class CreateDiaryRequest(BaseModel):
     userInfo: UserInfo
