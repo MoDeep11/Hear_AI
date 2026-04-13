@@ -23,7 +23,7 @@ class DiaryFeedbackRequest(BaseModel):
     nickname: str
     emotion: str
     content: str
-    imageUrls: Optional[List[str]] = []
+
 
 class DiaryFeedbackResponse(BaseModel):
     diaryId: str
