@@ -87,7 +87,7 @@ class DiaryService:
             ai_audio_url = None
             if ai_response_text:
                 ai_audio_url = await self.tts_service.generate_audio_url(ai_response_text)
-
+            
             return {
                 "userTranscription": user_transcription,
                 "aiResponseText": ai_response_text,

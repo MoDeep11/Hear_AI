@@ -7,7 +7,7 @@ class DiaryGenerator:
     def __init__(self, api_key: str):
         # 최신 SDK Client 객체 생성
         self.client = genai.Client(api_key=api_key)
-        self.model_id = 'models/gemini-2.5-flash' 
+        self.model_id = 'gemini-3-flash-preview'
         self.prompt_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "diary_generation.txt")
         self.create_diary_prompt_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "create_diary.txt")
 
