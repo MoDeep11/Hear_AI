@@ -2,6 +2,7 @@ from google import genai
 import json
 import os
 import asyncio
+import traceback
 
 class DiaryGenerator:
     def __init__(self, api_key: str):
@@ -10,6 +11,12 @@ class DiaryGenerator:
         self.model_id = 'gemini-2.5-flash'
         self.prompt_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "diary_generation.txt")
         self.create_diary_prompt_path = os.path.join(os.path.dirname(__file__), "..", "prompts", "create_diary.txt")
+
+    def _log_error(self, context: str, error: Exception):
+        print(f"[DiaryGenerator] {context} - {type(error).__name__}: {error}")
+        traceback.print_exc()
+        if "503" in str(error) or "UNAVAILABLE" in str(error).upper():
+            print("[DiaryGenerator] Gemini 503 / UNAVAILABLE 오류 감지됨")
 
     async def generate_response(self, user_text, history, user_info):
         """
@@ -63,7 +70,7 @@ class DiaryGenerator:
                 "suggestion": None
             }
         except Exception as e:
-            print(f"Gemini API 호출 에러: {str(e)}")
+            self._log_error("Gemini API 호출 에러(generate_response)", e)
             return {
                 "status": "CONTINUE", 
                 "aiResponseText": "잠시 통신이 원활하지 않아요. 다시 시도해 주세요!", 
