@@ -1,3 +1,4 @@
+import asyncio
 from ai.pipelines.feedback_generator import FeedbackGenerator
 
 class FeedbackService:
@@ -5,10 +6,14 @@ class FeedbackService:
         self.generator = FeedbackGenerator()
 
     async def get_diary_feedback(self, data):
-        # 파이프라인 호출
-        ai_comment = self.generator.generate(
-            nickname=data.nickname,
-            content=data.content,
-            emotion=data.emotion
-        )
-        return ai_comment
+        def generate_sync():
+            nickname = data.get("nickname") if isinstance(data, dict) else getattr(data, "nickname", "")
+            content = data.get("content") if isinstance(data, dict) else getattr(data, "content", "")
+            emotion = data.get("emotion") if isinstance(data, dict) else getattr(data, "emotion", "")
+            return self.generator.generate(
+                nickname=nickname,
+                content=content,
+                emotion=emotion
+            )
+
+        return await asyncio.to_thread(generate_sync)

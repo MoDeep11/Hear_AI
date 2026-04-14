@@ -5,6 +5,7 @@
 
 from fastapi import APIRouter, HTTPException, BackgroundTasks, Header
 from typing import Optional, List
+from types import SimpleNamespace
 import uuid
 import sys
 import os
@@ -24,6 +25,7 @@ print(sys.path)
 from server.app.service.diary_service import DiaryServiceRequest
 from ai.pipelines.diary_generator import DiaryGenerator
 from server.app.service.diary_service import DiaryService
+from server.app.service.feedback_service import FeedbackService
 from ai.voice.stt import STTService
 from ai.voice.tts import TTSService
 
@@ -98,6 +100,7 @@ stt_service = STTService()
 tts_service = TTSService()
 generator = DiaryGenerator(api_key=API_KEY)
 diary_service = DiaryService(generator=generator, stt_service=stt_service, tts_service=tts_service)
+feedback_service = FeedbackService()
 
 @router.post("/messages")
 async def handle_voice_message(request: ChatRequest):
@@ -128,6 +131,7 @@ class CreateDiaryResponse(BaseModel):
     content: str
     emotion: str
     tags: List[str] = []
+    aiComment: Optional[str] = None
 
 @api_router.post("/diaries", response_model=CreateDiaryResponse)
 async def create_diary(request: CreateDiaryRequest):
@@ -139,11 +143,24 @@ async def create_diary(request: CreateDiaryRequest):
         ai_audio_urls=request.aiAudioUrls
     )
 
+    ai_comment = ""
+    try:
+        feedback_request = SimpleNamespace(
+            nickname=request.userInfo.nickname,
+            content=diary_data.get("content", ""),
+            emotion=diary_data.get("emotion", "NEUTRAL")
+        )
+        ai_comment = await feedback_service.get_diary_feedback(feedback_request)
+    except Exception as e:
+        logger.error(f"Feedback generation error: {str(e)}")
+        ai_comment = "피드백 생성에 실패했습니다."
+
     return CreateDiaryResponse(
         userInfo=request.userInfo,
         content=diary_data.get("content", ""),
         emotion=diary_data.get("emotion", "NEUTRAL"),
-        tags=diary_data.get("tags", []) 
+        tags=diary_data.get("tags", []),
+        aiComment=ai_comment
     )
 
 # 진행 중인 작업들을 추적하기 위한 간단한 저장소

@@ -24,7 +24,6 @@ sys.path.insert(0, os.path.dirname(__file__) + '/../..')
 from ai.utils import s3_uploader
 from server.app.router.chat_router import router as chat_init_router
 from server.app.router.diary_router import router as diary_router, api_router as diary_api_router
-from server.app.router.feedback_router import router as feedback_router
 from server.app.router.report_router import router as report_router
 from server.app.router.diary_router import Yuwon_router
 
@@ -74,6 +73,5 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(chat_init_router)
 app.include_router(diary_router)
 app.include_router(diary_api_router)
-app.include_router(feedback_router)
 app.include_router(report_router)
 app.include_router(Yuwon_router)

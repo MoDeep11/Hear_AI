@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="ddb56a5b-f6a0-41ab-95b2-e1964c8fd40b" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.dockerignore" beforeDir="false" afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/router/diary_router.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/router/diary_router.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/router/feedback_router.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/service/diary_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/service/diary_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/server/app/service/feedback_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/server/app/service/feedback_service.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;jiseonghwan&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://MoDeep11@github.com/MoDeep11/Hear_AI.git&quot;,
+    &quot;accountId&quot;: &quot;95479520-045f-4eec-8f2e-486098436d11&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
+  <component name="ProjectId" id="3AgY0S5Uox226zuv7glkcQTb9B2" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.feedback_service.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.stt.executor": "Run",
+    "Python.tts.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "fix/feedback-router",
+    "junie.onboarding.icon.badge.shown": "true",
+    "last_opened_file_path": "C:/Users/user/Desktop/프로젝트/Hear_AI",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "ml.llm.LLMConfigurable",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\user\Desktop\프로젝트\Hear_AI\ai\voice" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
+      <module name="Hear_AI" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-6a121458b545-JavaScript-PY-251.25410.122" />
+        <option value="bundled-python-sdk-880ecab49056-36ea0e71a18c-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.25410.122" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="디폴트 작업">
+      <changelist id="ddb56a5b-f6a0-41ab-95b2-e1964c8fd40b" name="변경" comment="" />
+      <created>1773015456239</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1773015456239</updated>
+      <workItem from="1776171499273" duration="9000" />
+      <workItem from="1776171600615" duration="6801000" />
+    </task>
+    <task id="LOCAL-00001" summary="예 커밋할게요">
+      <option name="closed" value="true" />
+      <created>1773309826927</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1773309826927</updated>
+    </task>
+    <task id="LOCAL-00002" summary="커밋함">
+      <option name="closed" value="true" />
+      <created>1773310107521</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1773310107521</updated>
+    </task>
+    <task id="LOCAL-00003" summary="ㅊㄴㄹㄴㄹ">
+      <option name="closed" value="true" />
+      <created>1773310376309</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1773310376309</updated>
+    </task>
+    <task id="LOCAL-00004" summary="ㄹㄴㄹㄴㄴㅇ">
+      <option name="closed" value="true" />
+      <created>1773310387850</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1773310387850</updated>
+    </task>
+    <task id="LOCAL-00005" summary="ㅇㄴㄹㅇㄹㅇ">
+      <option name="closed" value="true" />
+      <created>1773310395559</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1773310395559</updated>
+    </task>
+    <task id="LOCAL-00006" summary="fs">
+      <option name="closed" value="true" />
+      <created>1773313189000</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1773313189000</updated>
+    </task>
+    <task id="LOCAL-00007" summary="ds">
+      <option name="closed" value="true" />
+      <created>1773313199778</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1773313199778</updated>
+    </task>
+    <task id="LOCAL-00008" summary="ds">
+      <option name="closed" value="true" />
+      <created>1773313204373</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1773313204373</updated>
+    </task>
+    <task id="LOCAL-00009" summary="feedback 끝!">
+      <option name="closed" value="true" />
+      <created>1773395512897</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1773395512897</updated>
+    </task>
+    <task id="LOCAL-00010" summary="feedback 끝!">
+      <option name="closed" value="true" />
+      <created>1773395526879</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1773395526879</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="initial project structure" />
+    <MESSAGE value="예 커밋할게요" />
+    <MESSAGE value="커밋함" />
+    <MESSAGE value="ㅊㄴㄹㄴㄹ" />
+    <MESSAGE value="ㄹㄴㄹㄴㄴㅇ" />
+    <MESSAGE value="ㅇㄴㄹㅇㄹㅇ" />
+    <MESSAGE value="fs" />
+    <MESSAGE value="ds" />
+    <MESSAGE value="feedback 끝!" />
+    <option name="LAST_COMMIT_MESSAGE" value="feedback 끝!" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/Hear_AI$feedback_service.coverage" NAME="feedback_service 커버리지 결과" MODIFIED="1776173601535" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/server/app/service" />
+  </component>
+</project>
