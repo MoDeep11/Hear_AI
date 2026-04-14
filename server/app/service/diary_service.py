@@ -128,7 +128,7 @@ class DiaryService:
                 "content": "죄송합니다. 일기 생성 중 오류가 발생했습니다.",
                 "emotion": "NEUTRAL",
                 "tags": []
-            }        
+            }
     
     async def generate_image(self, user_id: str, diary_id: str, emotion: str, content: str, task_id: str) -> Dict:
         """이미지 생성"""
