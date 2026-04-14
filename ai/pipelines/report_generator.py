@@ -5,7 +5,7 @@ from google import genai
 class MonthylyReportGenerator:
     def __init__(self, api_key: str, prompt_path: str):
         self.client = genai.Client(api_key=api_key)
-        self.model_id = "gemini-3-flash-preview"
+        self.model_id = "gemini-2.5-flash"
         self.prompt_path = prompt_path
 
     def _load_prompt_template(self):

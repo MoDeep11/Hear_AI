@@ -8,7 +8,7 @@ import time
 
 class ChatGenerator:
     _client = None
-    model_id = 'gemini-3-flash-preview'
+    model_id = 'gemini-2.5-flash'
     prompt_path = os.path.join(
         os.path.dirname(__file__), "..", "prompts", "chat_init.txt"
     )

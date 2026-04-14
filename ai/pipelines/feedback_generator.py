@@ -22,7 +22,7 @@ class FeedbackGenerator:
 
         try:
             response = self.client.models.generate_content(
-                model="gemini-3-flash-preview",
+                model="gemini-2.5-flash",
                 contents=instruction
             )
             return response.text
